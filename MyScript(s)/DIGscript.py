@@ -1,5 +1,6 @@
 import time, math, random
 import matplotlib.pyplot as plt
+import spidev
 
 
 #####Function that Adjusts the X-axis values to relfect time objects#####
@@ -19,6 +20,8 @@ def yCreation(yList=[], *args):
 
 
 def main():
+    #spidev
+    spi = spidev.SpiDev()
     #list declaration
     xList =[]
     yList =[]

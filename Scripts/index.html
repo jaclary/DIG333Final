@@ -1,0 +1,76 @@
+<head>
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- d3.js -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body id="body">
+  <script>
+    Plotly.d3.csv("data.csv", function(err, rows){
+
+      function unpackInitial(rows, key1, key2) {
+
+        rows.map(function(row) { return row[key1] = row[key1] + " " + row[key2];});
+
+        console.log(rows.map(function(row) { return row[key1]; }));
+        return rows.map(function(row) { return row[key1]; });
+      }
+
+      function unpack(rows, key){
+        
+          return rows.map(function(row) { return row[key]; });
+      }
+
+
+      function numberUnPack(row, key){
+        let realMin = d3.min(rows.map(function(row){return +row[key]}));
+        let realMax = d3.max(rows.map(function(row){return +row[key]}));
+
+        return rows.map(function(row) { return ((+row[key]-realMin)/(realMax-realMin)); });
+
+      }
+
+      var trace1 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'CO',
+        x: unpackInitial(rows, 'Date', 'Time'),
+        y: numberUnPack(rows, 'CO'),
+        line: {color: '#17BECF'}
+      }
+
+
+      var trace2 = {
+        type: "scatter",
+        mode: "lines",
+        name: 'LPG',
+        x: unpack(rows, 'Date', 'Time'),
+        y: numberUnPack(rows, 'LPG'),
+        line: {color: '#7F7F7F'}
+      }
+
+      var data = [trace1, trace2];
+
+      var layout = {
+        title: 'DIG333 Final: Gas Levels Over Time', 
+        xaxis: {
+          autorange: true, 
+          range: ["2018-05-10 00:17:38", '2018-05-10 19:28:20'], 
+          rangeslider: {range: ["2018-05-10 00:17:38", '2018-05-10 19:28:20']}, 
+          type: 'date'
+        }, 
+        yaxis: {
+          autorange: true, 
+          range: [0,1],
+          type: 'linear',
+
+        }
+      };
+
+      Plotly.newPlot('body', data, layout);
+    })
+  </script>
+</body>
+</html>
+
+
